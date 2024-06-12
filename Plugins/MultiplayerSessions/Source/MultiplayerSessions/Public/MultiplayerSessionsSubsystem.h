@@ -5,7 +5,13 @@
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "Interfaces/OnlineSessionInterface.h"
+
 #include "MultiplayerSessionsSubsystem.generated.h"
+
+//
+// Delcaring our own custom delegates for the Menu class to bind callbacks to
+//
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMultiplayerOnCreateSessionComplete, bool, bWasSuccessful);
 
 /**
  * 
@@ -14,7 +20,6 @@ UCLASS()
 class MULTIPLAYERSESSIONS_API UMultiplayerSessionsSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
-	
 public:
 	UMultiplayerSessionsSubsystem();
 
@@ -27,10 +32,16 @@ public:
 	void DestroySession();
 	void StartSession();
 
-protected:
 	//
-	// Internal callbacks for the delegates we will add to the Online Session Interface delegate list.
-	// These don't need to be called outside this class.
+	// Our own custom delegates for the Menu class to bind callbacks to
+	//
+	FMultiplayerOnCreateSessionComplete MultiplayerOnCreateSessionComplete;
+
+protected:
+
+	//
+	// Internal callbacks for the delegates we'll add to the Online Session Interface delegate list.
+	// Thise don't need to be called outside this class.
 	//
 	void OnCreateSessionComplete(FName SessionName, bool bWasSuccessful);
 	void OnFindSessionsComplete(bool bWasSuccessful);
@@ -44,21 +55,16 @@ private:
 
 	//
 	// To add to the Online Session Interface delegate list.
-	// We'll bind our MultiplayerSesionSubsystem internal callbacks to these.
+	// We'll bind our MultiplayerSessionsSubsystem internal callbacks to these.
 	//
 	FOnCreateSessionCompleteDelegate CreateSessionCompleteDelegate;
 	FDelegateHandle CreateSessionCompleteDelegateHandle;
-	
 	FOnFindSessionsCompleteDelegate FindSessionsCompleteDelegate;
-	FDelegateHandle FindSessionCompleteDelegateHandle;
-	
+	FDelegateHandle FindSessionsCompleteDelegateHandle;
 	FOnJoinSessionCompleteDelegate JoinSessionCompleteDelegate;
 	FDelegateHandle JoinSessionCompleteDelegateHandle;
-	
 	FOnDestroySessionCompleteDelegate DestroySessionCompleteDelegate;
 	FDelegateHandle DestroySessionCompleteDelegateHandle;
-	
 	FOnStartSessionCompleteDelegate StartSessionCompleteDelegate;
 	FDelegateHandle StartSessionCompleteDelegateHandle;
-	
 };
