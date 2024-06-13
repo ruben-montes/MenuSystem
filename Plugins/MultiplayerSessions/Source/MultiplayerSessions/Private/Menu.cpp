@@ -13,7 +13,7 @@ void UMenu::MenuSetup(int32 NumberOfPublicConnections, FString TypeOfMatch)
 	MatchType = TypeOfMatch;
 	AddToViewport();
 	SetVisibility(ESlateVisibility::Visible);
-	bIsFocusable = true;
+	SetIsFocusable(true);
 
 	UWorld* World = GetWorld();
 	if (World)
@@ -151,6 +151,10 @@ void UMenu::OnDestroySession(bool bWasSuccessful)
 
 void UMenu::OnStartSession(bool bWasSuccessful)
 {
+	if (MultiplayerSessionsSubsystem)
+	{
+		MultiplayerSessionsSubsystem->StartSession();
+	}
 }
 
 void UMenu::HostButtonClicked()
